@@ -20,7 +20,7 @@ class SorryCard: Card {
 
     class func validPairs() -> [(Int, String)] {
         return [
-        (0, "Sorry\nMove from Start and switch places with an opponent, whome you bump back to Start."),
+        (0, "Move from Start and switch places with an opponent, whom you bump back to Start."),
         (1, "Move from Start or move forward 1."),
         (2, "Move from Start or move forward 2.\nDraw Again."),
         (3, "Move forward 3."),

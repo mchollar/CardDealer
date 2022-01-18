@@ -16,7 +16,7 @@ class Deck {
         get { return self.cards.count }
     }
     
-    func add(card: Card, atTop: Bool) {
+    func add(card: Card, atTop: Bool = false) {
         
         if atTop {
             cards.insert(card, at: 0)
@@ -25,22 +25,15 @@ class Deck {
         }
         
     }
-    
-    func add(card: Card) {
-        add(card: card, atTop: false)
-    }
-    
+
     func drawRandomCard() -> Card? {
         
-        if cards.count > 0 {
-            let index = Int(arc4random()) % cards.count
-            let randomCard = cards[index]
-            cards.remove(at: index)
-            return randomCard
-        }
-        else {
-            return nil
-        }
+        guard !cards.isEmpty else { return nil }
+        
+        let index = Int(arc4random()) % cards.count
+        let randomCard = cards.remove(at: index)
+        return randomCard
+        
     }
     
     func removeAllCards() {

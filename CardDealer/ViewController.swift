@@ -21,11 +21,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-
     }
 
+    override func viewDidLayoutSubviews() {
+        dealNewDeck()
+    }
+    
     @IBAction func newDeckTouched(_ sender: UIButton) {
-        for view in deckView.subviews { view.removeFromSuperview() }
+        dealNewDeck()
+    }
+    
+    func dealNewDeck() {
+        for view in deckView.subviews {
+            view.removeFromSuperview()
+        }
+        
         firstCardBeingPlayed = true
         sorryDeck.newDeck()
         
@@ -38,8 +48,8 @@ class ViewController: UIViewController {
         topCardView?.card = sorryDeck.drawRandomCard() as? SorryCard
         bottomCardView?.card = sorryDeck.drawRandomCard() as? SorryCard
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(cardTouched(_:)))
-        topCardView?.addGestureRecognizer(tap)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(cardTouched(_:)))
+        topCardView?.addGestureRecognizer(tapRecognizer)
 
     }
     
@@ -52,7 +62,7 @@ class ViewController: UIViewController {
                               duration: 0.3,
                               options: .transitionFlipFromLeft,
                               animations: {
-                                topCardView.isFaceUp = true
+                topCardView.isFaceUp = true
             },
                               completion: nil)
             firstCardBeingPlayed = false
@@ -78,23 +88,11 @@ class ViewController: UIViewController {
             }
             self.bottomCardView?.isFaceUp = false
         
-//            if self.thirdCardView != nil {
-//                self.bottomCardView?.card = self.thirdCardView?.card
-//            } else {
                 self.bottomCardView?.card = self.sorryDeck.drawRandomCard() as? SorryCard
                 if self.bottomCardView != nil, self.bottomCardView!.card == nil {
                     self.bottomCardView?.removeFromSuperview()
                     self.bottomCardView = nil
                 }
-//            }
-            
-            
-//            self.thirdCardView?.card = self.sorryDeck.drawRandomCard() as? SorryCard
-//            if self.thirdCardView != nil, self.thirdCardView!.card == nil {
-//                self.thirdCardView?.removeFromSuperview()
-//                self.thirdCardView = nil
-//            }
-            
         }
         animator.startAnimation()
         
