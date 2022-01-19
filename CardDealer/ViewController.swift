@@ -55,9 +55,13 @@ class ViewController: UIViewController {
     
     @objc func cardTouched(_ sender: UITapGestureRecognizer) {
         
-        guard let topCardView = topCardView else { return }
+        guard let topCardView = topCardView else {
+            return
+        }
+        
         
         if firstCardBeingPlayed {
+            // Just flip it over and we're done
             UIView.transition(with: topCardView,
                               duration: 0.3,
                               options: .transitionFlipFromLeft,
@@ -69,30 +73,31 @@ class ViewController: UIViewController {
             return
         }
         
-        // If it's already faceup, then proceed to move it to the bottom and flip the old bottom while moving it to the top
         
-        let animator = UIViewPropertyAnimator(duration: 0.3, curve: .easeIn, animations: nil)
+        // Flip the bottom card and move the top card off to the side
         
-        animator.addAnimations { [unowned self] in
+        bottomCardView?.isFaceUp = true
+        
+        let animator = UIViewPropertyAnimator(duration: 0.3, curve: .easeIn) {
             topCardView.center.x += topCardView.bounds.size.width + 100
-            self.bottomCardView?.isFaceUp = true
         }
+        
+        // Then move the old top cardView back in place and set it up to be the next card, while giving the bottom cardView a new card drawn from the deck. If the deck didn't return a new card, remove the bottom cardView. If there is no bottom cardView, just remove the top card.
         
         animator.addCompletion{ [unowned self] (position) in
             topCardView.frame.origin = .zero
-            if self.bottomCardView != nil {
-                topCardView.card = self.bottomCardView!.card
-            } else {
-                topCardView.removeFromSuperview()
-                return
-            }
-            self.bottomCardView?.isFaceUp = false
-        
-                self.bottomCardView?.card = self.sorryDeck.drawRandomCard() as? SorryCard
-                if self.bottomCardView != nil, self.bottomCardView!.card == nil {
-                    self.bottomCardView?.removeFromSuperview()
+            
+            if let bottomCardView = self.bottomCardView {
+                topCardView.card = bottomCardView.card
+                bottomCardView.card = self.sorryDeck.drawRandomCard() as? SorryCard
+                if bottomCardView.card == nil {
+                    bottomCardView.removeFromSuperview()
                     self.bottomCardView = nil
                 }
+            } else {
+                topCardView.removeFromSuperview()
+            }
+            
         }
         animator.startAnimation()
         

@@ -19,7 +19,7 @@ class SorryCardView: UIView {
     let TEXT_FONT_SCALE_FACTOR = CGFloat(1.2)
     let MIDDLE_FONT_SCALE_FACTOR = CGFloat(8)
     let CORNER_OFFSET = CGFloat(24.0)
-    //let cardColor = UIColor(red: 0.953, green: 0.941, blue: 0.820, alpha: 1.0)
+    
     let cardColor = UIColor.white
     
     required init?(coder aDecoder: NSCoder) {
@@ -31,7 +31,6 @@ class SorryCardView: UIView {
         super.init(frame: frame)
         self.setup()
     }
-    
     
     private func setup() {
         self.backgroundColor = nil
@@ -65,20 +64,7 @@ class SorryCardView: UIView {
         cardColor.setFill()
         roundedRect.fill()
     }
-    
-    private func drawFaceDown() {
-        
-        if let image = UIImage.init(named: "sorry_logo"),
-        let rotatedImage = image.rotate(radians: .pi / 2) {
-            
-            let imageSize = CGSize(width: self.bounds.size.width - (CORNER_OFFSET * 4), height: self.bounds.size.height - (CORNER_OFFSET * 2))
-            let imageOrigin = CGPoint(x: CORNER_OFFSET * 2, y: CORNER_OFFSET)
-            
-            let imageBounds = CGRect(origin: imageOrigin, size: imageSize)
-            rotatedImage.draw(in: imageBounds)
-        }
-       
-    }
+
     
     private func drawFaceUp() {
         
@@ -89,11 +75,12 @@ class SorryCardView: UIView {
         let tempFont = UIFont.preferredFont(forTextStyle: .body)
         let textFont = tempFont.withSize(tempFont.pointSize * TEXT_FONT_SCALE_FACTOR)
         let numberFont = tempFont.withSize(tempFont.pointSize * NUMBER_FONT_SCALE_FACTOR)
+        let middleFont = tempFont.withSize(tempFont.pointSize * MIDDLE_FONT_SCALE_FACTOR)
         
         let cornerNumberText = NSAttributedString(string: numberString, attributes: [.font : numberFont])
         let descriptionText = NSAttributedString(string: text, attributes: [.font : textFont])
         
-        let cornerOrigin = CGPoint(x:CORNER_OFFSET, y: CORNER_OFFSET)
+        let cornerOrigin = CGPoint(x: CORNER_OFFSET, y: CORNER_OFFSET)
         let cornerSize = cornerNumberText.size()
         var textOrigin = cornerOrigin
         textOrigin.x += cornerSize.width + 20.0
@@ -113,7 +100,6 @@ class SorryCardView: UIView {
         } else {
             
             let middleString = numberString
-            let middleFont = tempFont.withSize(tempFont.pointSize * MIDDLE_FONT_SCALE_FACTOR)
             let middleNumberText = NSAttributedString(string: middleString, attributes: [.font : middleFont])
             let middleTextSize = middleNumberText.size()
             let textX = (self.bounds.width / 2) - (middleTextSize.width / 2)
@@ -123,6 +109,21 @@ class SorryCardView: UIView {
         }
         
     }
+    
+    private func drawFaceDown() {
+        
+        if let image = UIImage.init(named: "sorry_logo"),
+        let rotatedImage = image.rotate(radians: .pi / 2) {
+            
+            let imageSize = CGSize(width: self.bounds.size.width - (CORNER_OFFSET * 4), height: self.bounds.size.height - (CORNER_OFFSET * 2))
+            let imageOrigin = CGPoint(x: CORNER_OFFSET * 2, y: CORNER_OFFSET)
+            
+            let imageBounds = CGRect(origin: imageOrigin, size: imageSize)
+            rotatedImage.draw(in: imageBounds)
+        }
+       
+    }
+    
     
     func drawText(attrString: NSAttributedString, at origin: CGPoint, size: CGSize) {
         var textBounds = CGRect()
